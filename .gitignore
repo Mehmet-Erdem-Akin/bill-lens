@@ -1,0 +1,14 @@
+node_modules/
+.expo/
+dist/
+build/
+.env
+.env.local
+*.log
+.DS_Store
+coverage/
+backend/dist/
+mobile/.expo/
+mobile/dist/
+*.tsbuildinfo
+.prisma/

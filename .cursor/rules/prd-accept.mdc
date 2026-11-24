@@ -1,0 +1,23 @@
+---
+description: Kullanıcı "tamam süper" ile onayladığında prd.md ## Yapıldı bölümünü güncelle
+globs:
+alwaysApply: true
+---
+
+# prd-accept
+
+Bu rule yalnızca kullanıcı mesajı **"tamam süper"** ile başladığında çalışır.
+
+## Amaç
+Onaylanan yeni özelliklerin `prd.md` dosyasında güncel tutulması.
+
+## Action
+1. Proje kökündeki `prd.md` dosyasını aç.
+2. `## Yapıldı` başlığını bul.
+3. Kullanıcının "tamam süper" dediği en son onaylanan çıktının kısa özetini bu listede ara.
+4. Özet listede yoksa listenin en altına `- {özet}` olarak ekle.
+5. Zaten varsa hiçbir ekleme yapma.
+
+## Notlar
+- `prd.md` yoksa oluştur ve `## Yapıldı` bölümünü ekle.
+- Özet kısa, geçmiş zamanlı ve özellik odaklı olmalı (ör. "Demo Mode dashboard ekranı eklendi").
