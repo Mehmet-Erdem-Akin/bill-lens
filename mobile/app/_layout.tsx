@@ -8,7 +8,7 @@ import {
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Stack, useRouter, useSegments } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
 
@@ -54,10 +54,8 @@ const RootNavigator = () => {
   const segments = useSegments();
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const hydrateDone = useAuthStore((s) => s.hydrateDone);
-  const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    // Persist rehydrate may already be done if storage is sync-empty
     const unsub = useAuthStore.persist.onFinishHydration(() => {
       useAuthStore.getState().setHydrateDone(true);
     });
@@ -69,7 +67,6 @@ const RootNavigator = () => {
 
   useEffect(() => {
     if (!hydrateDone) return;
-    setReady(true);
 
     const inAuthGroup = segments[0] === '(auth)';
     if (!isAuthenticated && !inAuthGroup) {
@@ -81,8 +78,7 @@ const RootNavigator = () => {
     }
   }, [hydrateDone, isAuthenticated, segments, router]);
 
-  if (!ready && !hydrateDone) return null;
-
+  // Always mount navigator to avoid blank first paint / SSR shell.
   return (
     <Stack
       screenOptions={{
