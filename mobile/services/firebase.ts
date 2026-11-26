@@ -82,7 +82,7 @@ export const getFunctionsBaseUrl = (): string => {
   if (explicit) return explicit.replace(/\/$/, '');
 
   const projectId = process.env.EXPO_PUBLIC_FIREBASE_PROJECT_ID;
-  if (!projectId) return 'http://127.0.0.1:5001/bill-lens/europe-west1/api';
+  if (!projectId) return 'http://127.0.0.1:5001/bill-lens-14e45/europe-west1/api';
 
   if (process.env.EXPO_PUBLIC_USE_FIREBASE_EMULATOR === 'true') {
     return `http://127.0.0.1:5001/${projectId}/europe-west1/api`;
