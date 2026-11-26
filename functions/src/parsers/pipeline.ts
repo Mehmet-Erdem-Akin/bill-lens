@@ -1,7 +1,7 @@
-import type { InboundEmailPayload, ParsedOrder } from '../types.js';
-import { detectPlatform } from './detectPlatform.js';
-import { parseKnownTemplate } from './htmlParsers.js';
-import { parseWithLlmFallback } from './llmFallback.js';
+import type { InboundEmailPayload, ParsedOrder } from '../types';
+import { detectPlatform } from './detectPlatform';
+import { parseKnownTemplate } from './htmlParsers';
+import { parseWithLlmFallback } from './llmFallback';
 
 const extractAlias = (toHeader?: string | string[]): string | null => {
   const raw = Array.isArray(toHeader) ? toHeader[0] : toHeader;

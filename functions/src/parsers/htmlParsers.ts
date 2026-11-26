@@ -1,7 +1,7 @@
 import * as cheerio from 'cheerio';
 
-import type { ParsedOrder } from '../types.js';
-import type { DetectedPlatform } from './detectPlatform.js';
+import type { ParsedOrder } from '../types';
+import type { DetectedPlatform } from './detectPlatform';
 
 const parseMoney = (raw?: string | null): number => {
   if (!raw) return 0;

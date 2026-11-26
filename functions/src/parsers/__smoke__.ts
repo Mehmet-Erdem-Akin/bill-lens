@@ -1,4 +1,4 @@
-import { parseKnownTemplate } from './htmlParsers.js';
+import { parseKnownTemplate } from './htmlParsers';
 
 const trendyolSample = `
 <html><body>
