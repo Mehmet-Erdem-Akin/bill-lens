@@ -88,7 +88,7 @@ API tabanı (deploy sonrası):
 - Inbound webhook production’da **`INBOUND_WEBHOOK_SECRET` zorunlu**; istekte `x-webhook-secret` olmalı. Secret yoksa `503`.
 - `GET /health` herkese açık (yalnızca durum).
 
-Functions ortamı: `INBOUND_WEBHOOK_SECRET=...` (güçlü rastgele). İsteğe bağlı: `OPENAI_API_KEY`.
+Functions ortamı: `INBOUND_WEBHOOK_SECRET=...` (güçlü rastgele). İsteğe bağlı: `GEMINI_API_KEY` (Google AI Studio — bilinmeyen şablon / PDF fallback).
 
 Mobil env: `mobile/.env.example` → Firebase web app config + isteğe bağlı `EXPO_PUBLIC_API_URL`.
 
