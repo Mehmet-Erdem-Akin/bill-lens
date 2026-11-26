@@ -1,8 +1,8 @@
 # Bill Lens — Teknik Ürün ve Mimari Analiz Dokümanı (PRD)
 
 **Proje Adı:** Bill Lens — Bireysel E-Ticaret Harcama ve Tasarruf Analiz Mobil Uygulaması  
-**Mobil Teknoloji Yığını:** React Native (Expo SDK 58 / Expo Router), TypeScript, Zustand, TanStack Query, NativeWind token’ları + StyleSheet  
-**Backend & Veritabanı:** Node.js (Express), PostgreSQL, Prisma ORM  
+**Mobil Teknoloji Yığını:** React Native (Expo SDK 58 / Expo Router), TypeScript, Zustand, TanStack Query, NativeWind token’ları + StyleSheet, Firebase JS SDK  
+**Backend & Veritabanı:** Firebase Cloud Functions (Express), Cloud Firestore, Firebase Auth  
 **Hedef Platformlar:** iOS & Android  
 **Temel Amaç:** Trendyol, Yemeksepeti, Getir, Amazon TR, Hepsiburada sipariş/fatura e-postalarını otomatik ayrıştırarak ürün bazlı fiyat takibi, kategori bazlı harcama analizi ve tasarruf önerileri sunmak.
 
@@ -11,9 +11,9 @@
 ## 1. E-posta entegrasyon mimarisi
 
 ### Faz 1 — Inbound Email Parse (MVP)
-- Kullanıcıya unique `inbound_alias` atanır.
+- Kullanıcıya unique `inbound_alias` atanır (Auth user create + `/auth/register`).
 - Mobilde `expo-clipboard` ile kopyalama + filtre rehberi.
-- Webhook: `POST /api/webhooks/inbound-email`.
+- Webhook: `POST /api/webhooks/inbound-email` (Cloud Function `api`).
 
 ### Faz 2 — OAuth + on-device parsing
 - Gmail / Outlook `expo-auth-session` stub’ları.
@@ -39,15 +39,20 @@
 
 ---
 
-## 4. Veritabanı
-`users`, `connected_accounts`, `orders`, `order_items` — Prisma şeması `backend/prisma/schema.prisma`.
+## 4. Veri modeli (Firestore)
+- `users/{uid}` — profil, `inboundAlias`, bütçe
+- `users/{uid}/connectedAccounts/{id}`
+- `users/{uid}/orders/{orderId}` — kalemler gömülü dizi
+- `inboundAliases/{alias}` → `{ userId }` (webhook çözümlemesi)
+
+Kurallar: `firestore.rules`. Ayrı Postgres / Docker gerekmez.
 
 ---
 
 ## 5. Mağaza uyumluluğu
 1. Auth ayrımı (Gmail login ekranında yok)  
 2. Demo Mode  
-3. `DELETE /api/user/account` + local OAuth temizliği  
+3. `DELETE /user/account` (Firebase Auth + Firestore cascade) + local OAuth temizliği  
 4. Şeffaf izin modalı
 
 ---
@@ -62,3 +67,4 @@
 - Faz 2 OAuth stub’ları (`expo-auth-session` + SecureStore)
 - App Store uyumluluğu: Apple Sign-In akışı, Demo Mode, gizlilik modalı, hesap/veri silme
 - Store config’leri word-rush referanslı (`app.json`, `eas.json`, appleTeamId)
+- Firebase entegrasyonu: Cloud Functions API, Firestore, Auth; Express/Prisma/Postgres kaldırıldı

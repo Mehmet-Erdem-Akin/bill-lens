@@ -1,0 +1,32 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isOwner(userId) {
+      return request.auth != null && request.auth.uid == userId;
+    }
+
+    match /users/{userId} {
+      allow read, update: if isOwner(userId);
+      allow create: if isOwner(userId)
+        && request.resource.data.email is string
+        && request.resource.data.inboundAlias is string;
+      allow delete: if isOwner(userId);
+
+      match /connectedAccounts/{accountId} {
+        allow read, write: if isOwner(userId);
+      }
+
+      match /orders/{orderId} {
+        allow read: if isOwner(userId);
+        allow write: if false;
+      }
+    }
+
+    // Inbound alias map — only Cloud Functions (Admin SDK) may write
+    match /inboundAliases/{alias} {
+      allow read: if request.auth != null
+        && resource.data.userId == request.auth.uid;
+      allow write: if false;
+    }
+  }
+}

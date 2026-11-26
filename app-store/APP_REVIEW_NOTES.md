@@ -27,10 +27,10 @@ Bill Lens helps individuals track e-commerce spending from platforms such as Tre
 Gmail/Outlook are NOT login methods. They appear only under Settings → Veri Kaynakları after sign-in.
 
 5) ACCOUNT DELETION (Guideline 5.1.1 / KVKK)
-Settings → "Hesabı ve Verileri Sil" clears secure tokens locally and calls DELETE /api/user/account when backend is configured.
+Settings → "Hesabı ve Verileri Sil" clears secure tokens locally and calls DELETE /user/account on Firebase Cloud Functions (removes Auth user + Firestore data) when Firebase is configured.
 
 6) EXTERNAL SERVICES
-- Bill Lens API (Express/Prisma/PostgreSQL) for inbound email webhook and account deletion
+- Firebase (Auth, Firestore, Cloud Functions) for accounts, inbound email webhook, and account deletion
 - Optional OpenAI for unknown invoice templates
 - Optional Google/Microsoft OAuth when client IDs are configured
 

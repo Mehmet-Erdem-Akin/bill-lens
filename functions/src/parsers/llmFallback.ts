@@ -1,4 +1,4 @@
-import type { ParsedOrder } from '../types.js';
+import type { ParsedOrder } from '../types';
 
 /**
  * Structured JSON fallback for unknown templates / PDF e-Arşiv text.

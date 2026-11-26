@@ -16,8 +16,9 @@ Trendyol, Yemeksepeti, Getir, Amazon TR ve Hepsiburada sipariş e-postalarını 
 
 ## Yapı
 
-- `mobile/` — Expo SDK 58, Expo Router, TypeScript, Zustand, TanStack Query
-- `backend/` — Express + Prisma + PostgreSQL (inbound email webhook & parsers)
+- `mobile/` — Expo SDK 58, Expo Router, TypeScript, Zustand, TanStack Query, Firebase Auth/Firestore SDK
+- `functions/` — Firebase Cloud Functions (Express API + e-posta parser pipeline)
+- Firestore + Firebase Auth — kullanıcı, inbound alias, sipariş verisi (ayrı sunucu / Postgres yok)
 - `app-store/` — mağaza inceleme notları ve listing taslakları
 - `docs/screenshots/` — UI ekran görüntüleri
 - `prd.md` — ürün / mimari dokümanı
@@ -26,11 +27,13 @@ Trendyol, Yemeksepeti, Getir, Amazon TR ve Hepsiburada sipariş e-postalarını 
 
 ```bash
 cd mobile
+cp .env.example .env   # Firebase web config değerlerini doldurun
 npm install
 npx expo start
 ```
 
-Demo Mode: giriş ekranında **E-posta Bağlamadan Örnek Verilerle Keşfet**.
+Demo Mode: giriş ekranında **E-posta Bağlamadan Örnek Verilerle Keşfet**.  
+Firebase env’leri boşsa e-posta / Apple girişi yerel stub profille çalışır; production için Firebase zorunludur.
 
 Web önizleme / ekran görüntüsü:
 
@@ -40,20 +43,43 @@ npx expo start --web --port 8081
 node scripts/capture-screenshots.mjs
 ```
 
-## Backend
+## Firebase backend
+
+Ayrı bir VPS veya Postgres gerekmez. API, Auth ve veritabanı Firebase üzerindedir.
+
+1. [Firebase Console](https://console.firebase.google.com/)’da proje oluşturun (veya `.firebaserc` içindeki `bill-lens` id’sini kendi projenizle değiştirin).
+2. Authentication → Email/Password (+ isteğe bağlı Apple) açın.
+3. Firestore Database oluşturun.
+4. Deploy:
 
 ```bash
-docker compose up -d
-cd backend
-cp .env.example .env
-npm install
-npx prisma generate
-npx prisma migrate dev --name init
-npm run dev
+npm install -g firebase-tools
+firebase login
+cd functions && npm install && npm run build && cd ..
+firebase deploy --only functions,firestore
 ```
 
-Webhook: `POST /api/webhooks/inbound-email`  
-Hesap silme: `DELETE /api/user/account` (`x-user-id` veya `x-user-email`)
+Yerel emulator:
+
+```bash
+cd functions && npm install && npm run serve
+```
+
+API tabanı (deploy sonrası):
+
+`https://europe-west1-<PROJECT_ID>.cloudfunctions.net/api`
+
+| Endpoint | Açıklama |
+| --- | --- |
+| `GET /health` | sağlık kontrolü |
+| `POST /auth/register` | Auth token ile Firestore profil + inbound alias |
+| `POST /webhooks/inbound-email` | inbound e-posta parse & sipariş kaydı |
+| `PATCH /user/budget` | aylık bütçe |
+| `DELETE /user/account` | hesap + Firestore verisi + Auth kullanıcısı |
+
+Webhook güvenliği için Functions ortamında `INBOUND_WEBHOOK_SECRET` tanımlayın; istekte `x-webhook-secret` header’ı beklenir. İsteğe bağlı LLM fallback için `OPENAI_API_KEY`.
+
+Mobil env: `mobile/.env.example` → Firebase web app config + isteğe bağlı `EXPO_PUBLIC_API_URL`.
 
 ## Mağaza kimlikleri
 

@@ -120,7 +120,7 @@ export default function SettingsScreen() {
               }
               await clearOAuthTokens();
               deleteAllLocalData();
-              logout();
+              await logout();
               router.replace('/(auth)/login');
             } catch {
               Alert.alert('Hata', 'Hesap silinemedi. Lütfen tekrar deneyin.');
@@ -266,8 +266,10 @@ export default function SettingsScreen() {
 
         <Pressable
           onPress={() => {
-            logout();
-            router.replace('/(auth)/login');
+            void (async () => {
+              await logout();
+              router.replace('/(auth)/login');
+            })();
           }}
           style={styles.logoutBtn}
           accessibilityRole="button"

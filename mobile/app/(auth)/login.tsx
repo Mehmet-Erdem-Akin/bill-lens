@@ -46,24 +46,13 @@ export default function LoginScreen() {
   const handleApple = async () => {
     setLoading(true);
     setError(null);
-    try {
-      if (Platform.OS === 'ios') {
-        await AppleAuthentication.signInAsync({
-          requestedScopes: [
-            AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
-            AppleAuthentication.AppleAuthenticationScope.EMAIL,
-          ],
-        });
-      }
-      await loginWithApple();
-      router.replace('/(tabs)');
-    } catch {
-      // Simulator / cancel — still allow mock Apple login for development
-      await loginWithApple();
-      router.replace('/(tabs)');
-    } finally {
-      setLoading(false);
+    const result = await loginWithApple();
+    setLoading(false);
+    if (!result.ok) {
+      setError(result.error ?? 'Apple ile giriş başarısız');
+      return;
     }
+    router.replace('/(tabs)');
   };
 
   const handleDemo = () => {
