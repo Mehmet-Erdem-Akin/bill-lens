@@ -53,7 +53,8 @@
       "typedRoutes": true
     },
     "extra": {
-      "apiUrl": "http://localhost:3001/api",
+      "firebaseProjectId": "bill-lens-14e45",
+      "functionsRegion": "europe-west1",
       "eas": {
         "projectId": "00000000-0000-0000-0000-000000000000"
       }

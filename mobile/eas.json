@@ -8,7 +8,8 @@
       "distribution": "internal",
       "autoIncrement": true,
       "env": {
-        "EXPO_PUBLIC_API_URL": "http://localhost:3001/api"
+        "EXPO_PUBLIC_FIREBASE_PROJECT_ID": "bill-lens-14e45",
+        "EXPO_PUBLIC_USE_FIREBASE_EMULATOR": "false"
       },
       "android": {
         "buildType": "apk"
@@ -20,13 +21,13 @@
         "simulator": true
       },
       "env": {
-        "EXPO_PUBLIC_API_URL": "http://localhost:3001/api"
+        "EXPO_PUBLIC_FIREBASE_PROJECT_ID": "bill-lens-14e45"
       }
     },
     "production": {
       "autoIncrement": true,
       "env": {
-        "EXPO_PUBLIC_API_URL": "https://api.billlens.app/api"
+        "EXPO_PUBLIC_FIREBASE_PROJECT_ID": "bill-lens-14e45"
       }
     }
   },
