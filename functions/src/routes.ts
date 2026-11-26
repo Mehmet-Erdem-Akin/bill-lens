@@ -62,6 +62,12 @@ router.post('/auth/register', async (req, res) => {
 
 router.post('/webhooks/inbound-email', async (req, res) => {
   const secret = process.env.INBOUND_WEBHOOK_SECRET;
+  const isEmulator = process.env.FUNCTIONS_EMULATOR === 'true';
+  // Production: secret zorunlu — URL bilinse bile 3. şahıs webhook atamaz
+  if (!secret && !isEmulator) {
+    res.status(503).json({ error: 'webhook_secret_not_configured' });
+    return;
+  }
   if (secret) {
     const provided = req.headers['x-webhook-secret'];
     if (provided !== secret) {

@@ -77,7 +77,14 @@ API tabanı (deploy sonrası):
 | `PATCH /user/budget` | aylık bütçe |
 | `DELETE /user/account` | hesap + Firestore verisi + Auth kullanıcısı |
 
-Webhook güvenliği için Functions ortamında `INBOUND_WEBHOOK_SECRET` tanımlayın; istekte `x-webhook-secret` header’ı beklenir. İsteğe bağlı LLM fallback için `OPENAI_API_KEY`.
+### Güvenlik
+
+- Kullanıcı endpoint’leri (`/auth/register`, `/user/budget`, `/user/account`) **Firebase ID token** ister; token yoksa `401`. Her kullanıcı yalnızca **kendi** `uid` verisine dokunur.
+- Firestore: sipariş / alias yazma istemciye kapalı; yalnızca Cloud Functions (Admin SDK).
+- Inbound webhook production’da **`INBOUND_WEBHOOK_SECRET` zorunlu**; istekte `x-webhook-secret` olmalı. Secret yoksa `503`.
+- `GET /health` herkese açık (yalnızca durum).
+
+Functions ortamı: `INBOUND_WEBHOOK_SECRET=...` (güçlü rastgele). İsteğe bağlı: `OPENAI_API_KEY`.
 
 Mobil env: `mobile/.env.example` → Firebase web app config + isteğe bağlı `EXPO_PUBLIC_API_URL`.
 

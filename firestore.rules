@@ -5,24 +5,31 @@ service cloud.firestore {
       return request.auth != null && request.auth.uid == userId;
     }
 
+    function budgetOnlyUpdate() {
+      // Kullanıcı yalnızca bütçe alanlarını değiştirebilir; alias/email sabit kalır
+      return request.resource.data.email == resource.data.email
+        && request.resource.data.inboundAlias == resource.data.inboundAlias
+        && request.resource.data.authProvider == resource.data.authProvider;
+    }
+
     match /users/{userId} {
-      allow read, update: if isOwner(userId);
-      allow create: if isOwner(userId)
-        && request.resource.data.email is string
-        && request.resource.data.inboundAlias is string;
-      allow delete: if isOwner(userId);
+      // Profil oluşturma / silme yalnızca Cloud Functions (Admin SDK)
+      allow read: if isOwner(userId);
+      allow create, delete: if false;
+      allow update: if isOwner(userId) && budgetOnlyUpdate();
 
       match /connectedAccounts/{accountId} {
         allow read, write: if isOwner(userId);
       }
 
+      // Siparişler yalnızca Functions yazar; istemci sadece kendi verisini okur
       match /orders/{orderId} {
         allow read: if isOwner(userId);
         allow write: if false;
       }
     }
 
-    // Inbound alias map — only Cloud Functions (Admin SDK) may write
+    // Inbound alias haritası — yalnızca Admin SDK
     match /inboundAliases/{alias} {
       allow read: if request.auth != null
         && resource.data.userId == request.auth.uid;
