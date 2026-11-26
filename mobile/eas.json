@@ -8,7 +8,7 @@
       "distribution": "internal",
       "autoIncrement": true,
       "env": {
-        "EXPO_PUBLIC_FIREBASE_PROJECT_ID": "bill-lens",
+        "EXPO_PUBLIC_FIREBASE_PROJECT_ID": "bill-lens-14e45",
         "EXPO_PUBLIC_USE_FIREBASE_EMULATOR": "false"
       },
       "android": {
@@ -21,13 +21,13 @@
         "simulator": true
       },
       "env": {
-        "EXPO_PUBLIC_FIREBASE_PROJECT_ID": "bill-lens"
+        "EXPO_PUBLIC_FIREBASE_PROJECT_ID": "bill-lens-14e45"
       }
     },
     "production": {
       "autoIncrement": true,
       "env": {
-        "EXPO_PUBLIC_FIREBASE_PROJECT_ID": "bill-lens"
+        "EXPO_PUBLIC_FIREBASE_PROJECT_ID": "bill-lens-14e45"
       }
     }
   },

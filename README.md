@@ -47,14 +47,18 @@ node scripts/capture-screenshots.mjs
 
 Ayrı bir VPS veya Postgres gerekmez. API, Auth ve veritabanı Firebase üzerindedir.
 
-1. [Firebase Console](https://console.firebase.google.com/)’da proje oluşturun (veya `.firebaserc` içindeki `bill-lens` id’sini kendi projenizle değiştirin).
-2. Authentication → Email/Password (+ isteğe bağlı Apple) açın.
-3. Firestore Database oluşturun.
+Firebase proje id: `bill-lens-14e45` (`.firebaserc`).
+
+1. Authentication → Email/Password (+ isteğe bağlı Apple) açık olmalı.
+2. Firestore (`eur3`) oluşturulmuş olmalı.
+3. Blaze (pay-as-you-go) plana geç (Functions deploy için gerekli; küçük kullanımda genelde 0₺).
 4. Deploy:
 
 ```bash
 npm install -g firebase-tools
 firebase login
+firebase use bill-lens-14e45
+# functions/.env içine INBOUND_WEBHOOK_SECRET yaz
 cd functions && npm install && npm run build && cd ..
 firebase deploy --only functions,firestore
 ```
@@ -67,7 +71,7 @@ cd functions && npm install && npm run serve
 
 API tabanı (deploy sonrası):
 
-`https://europe-west1-<PROJECT_ID>.cloudfunctions.net/api`
+`https://europe-west1-bill-lens-14e45.cloudfunctions.net/api`
 
 | Endpoint | Açıklama |
 | --- | --- |
